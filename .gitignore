@@ -1,0 +1,5 @@
+#ignore everything except the manifest files
+.*
+*.log
+*.tmp
+!.gitignore

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multicontainer-db-pod
+spec:
+  containers:
+  - name: mysql-server
+    image: mysql:latest
+    ports:
+    - containerPort: 3306
+    env:
+    - name: MYSQL_DATABASE
+      value: admintestdb
+    - name: MYSQL_ROOT_PASSWORD
+      value: admin1234
+  - name: mysql-client
+    image: mysql:latest
+    command: ["/bin/sh", "-c"]
+    args:
+    - |
+      until mysql -h 127.0.0.1 -u root -padmin1234 -e "SELECT 1" &> /dev/null; do
+        echo "Waiting for MySQL server..."
+        sleep 3
+      done
+      echo "MySQL is ready!"
+      tail -f /dev/null
